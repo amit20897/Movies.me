@@ -1,21 +1,24 @@
 package amit.green.moviesme.ui.home
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import amit.green.moviesme.R
 import amit.green.moviesme.api.model.Title
+import android.os.Bundle
 import android.view.*
+import androidx.appcompat.widget.SearchView
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : Fragment(), HomeContract.View {
+class HomeFragment : Fragment(), HomeContract.View, MoviesAdapter.MoviesAdapterListener, SearchView.OnQueryTextListener {
 
     private lateinit var presenter: HomeContract.Presenter
 
     override fun onCreateView(
-            inflater: LayoutInflater,
-            container: ViewGroup?,
-            savedInstanceState: Bundle?
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
     ): View? {
         setHasOptionsMenu(true)
         return inflater.inflate(R.layout.fragment_home, container, false)
@@ -31,12 +34,17 @@ class HomeFragment : Fragment(), HomeContract.View {
     // region Initialization
 
     override fun initRecyclerView() {
-        moviesRV.adapter = MoviesAdapter(listOf())
+        moviesRV.adapter = MoviesAdapter(listOf(), this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         inflater.inflate(R.menu.menu_search, menu)
         super.onCreateOptionsMenu(menu, inflater)
+
+        val item = menu.findItem(R.id.app_bar_search)
+        val searchView = item.actionView as SearchView
+        searchView.setOnQueryTextListener(this)
+        searchView.isIconified = false
     }
 
     // endregion
@@ -52,9 +60,64 @@ class HomeFragment : Fragment(), HomeContract.View {
 
     // region State Update
 
-    override fun updateMovies(movies: List<Title>) {
+    override fun setMovies(movies: List<Title>) {
         val adapter = moviesRV.adapter as? MoviesAdapter ?: return
         adapter.setMovies(movies)
+    }
+
+    override fun addMovies(movies: List<Title>) {
+        val adapter = moviesRV.adapter as? MoviesAdapter ?: return
+        adapter.addMovies(movies)
+    }
+
+    override fun startLoading() {
+
+    }
+
+    override fun stopLoading() {
+
+    }
+
+    override fun showError(message: String?) {
+        Snackbar.make(
+            requireView(),
+            message ?: requireContext().getString(R.string.error_movies_fetch),
+            Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    // endregion
+
+    // region Navigation
+
+    override fun moveToTitleFragment(title: Title) {
+        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToTitleFragment())
+    }
+
+    // endregion
+
+    // region Movies Adapter Listener
+
+    override fun onItemClick(adapter: MoviesAdapter, item: Title, position: Int) {
+        presenter.onItemClick(item, position)
+    }
+
+    override fun onLastItemReached(adapter: MoviesAdapter) {
+        presenter.onLastItemReached()
+    }
+
+    // endregion
+
+    // region Search View Listener
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        presenter.onQueryTextSubmit(query)
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        presenter.onQueryTextChange(newText)
+        return true
     }
 
     // endregion

@@ -1,7 +1,6 @@
 package amit.green.moviesme.ui.home
 
 import amit.green.moviesme.api.API
-import amit.green.moviesme.api.model.Movie
 import amit.green.moviesme.api.model.OMDBSearch
 import amit.green.moviesme.api.model.Title
 import androidx.lifecycle.ViewModel
@@ -13,23 +12,39 @@ class HomeModel : ViewModel(), HomeContract.Model {
 
     // region Properties
 
-    override var movies: ArrayList<Movie> = arrayListOf()
+    override var presenter: HomeContract.Presenter? = null
+    override var movies: ArrayList<Title> = arrayListOf()
+    override var hasReachedEnd: Boolean = false
+    override var currentPage: Int = 0
+    override var currentSearch: String = ""
+    private var isLoading = false
 
     // endregion
 
     // region Networking
 
-    override fun fetchMovies(cb: (Throwable?, List<Title>?) -> Unit) {
-        API.moviesRepository.search("the pirates").enqueue(object: Callback<OMDBSearch> {
+    override fun fetchMovies(search: String, page: Int) {
+        if (isLoading) return
+        isLoading = true
+        API.moviesRepository.search(search, page).enqueue(object: Callback<OMDBSearch> {
             override fun onResponse(call: Call<OMDBSearch>, response: Response<OMDBSearch>) {
-                cb(null, response.body()?.search)
+                isLoading = false
+                val movies = response.body()?.search
+                if (movies == null) {
+                    presenter?.onMoviesFetchFailed(null, page, search)
+                } else {
+                    this@HomeModel.movies.addAll(movies)
+                    presenter?.onMoviesReceived(movies, page, search)
+                }
             }
 
             override fun onFailure(call: Call<OMDBSearch>, t: Throwable) {
-                cb(t, null)
+                isLoading = false
+                presenter?.onMoviesFetchFailed(t, page, search)
             }
         })
     }
+
 
     // endregion
 }

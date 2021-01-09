@@ -1,6 +1,5 @@
 package amit.green.moviesme.ui.home
 
-import amit.green.moviesme.api.model.Movie
 import amit.green.moviesme.api.model.Title
 
 interface HomeContract {
@@ -9,13 +8,17 @@ interface HomeContract {
 
         // region Properties
 
-        var movies: ArrayList<Movie>
+        var presenter: Presenter?
+        var movies: ArrayList<Title>
+        var hasReachedEnd: Boolean
+        var currentPage: Int
+        var currentSearch: String
 
         // endregion
 
         // region Networking
 
-        fun fetchMovies(cb: (Throwable?, List<Title>?) -> Unit)
+        fun fetchMovies(search: String, page: Int = 0)
 
         // endregion
     }
@@ -30,20 +33,42 @@ interface HomeContract {
 
         // region State Update
 
-        fun updateMovies(movies: List<Title>)
+        fun setMovies(movies: List<Title>)
+        fun addMovies(movies: List<Title>)
+
+        // endregion
+
+        // region Navigation
+
+        fun moveToTitleFragment(title: Title)
+        fun startLoading()
+        fun stopLoading()
+        fun showError(message: String?)
 
         // endregion
     }
 
     interface Presenter {
 
-        // region View Events
-
-        // endregion
-
         // region Lifecycle
 
         fun onDestroy()
+
+        // endregion
+
+        // region View Events
+
+        fun onItemClick(title: Title, position: Int)
+        fun onLastItemReached()
+        fun onQueryTextSubmit(query: String?)
+        fun onQueryTextChange(newText: String?)
+
+        // endregion
+
+        // region Model Events
+
+        fun onMoviesReceived(movies: List<Title>, page: Int, search: String)
+        fun onMoviesFetchFailed(e: Throwable?, page: Int, search: String)
 
         // endregion
     }

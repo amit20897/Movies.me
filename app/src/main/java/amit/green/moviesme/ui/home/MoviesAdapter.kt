@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import kotlinx.android.synthetic.main.item_movie.view.*
 
-class MoviesAdapter(movies: List<Title>?) : RecyclerView.Adapter<MoviesAdapter.MovieHolder>() {
+class MoviesAdapter(
+    movies: List<Title>?, var listener: MoviesAdapterListener?
+) : RecyclerView.Adapter<MoviesAdapter.MovieHolder>() {
 
     var movies: List<Title> = movies ?: listOf()
         private set
@@ -20,7 +22,9 @@ class MoviesAdapter(movies: List<Title>?) : RecyclerView.Adapter<MoviesAdapter.M
     }
 
     override fun onBindViewHolder(holder: MovieHolder, position: Int) {
-        holder.bind(movies[position])
+        val title = movies[position]
+        holder.bind(title, position)
+        listener?.onLastItemReached(this)
     }
 
     override fun getItemCount(): Int = movies.size
@@ -30,17 +34,31 @@ class MoviesAdapter(movies: List<Title>?) : RecyclerView.Adapter<MoviesAdapter.M
         this.notifyDataSetChanged()
     }
 
-    class MovieHolder(view: View) : RecyclerView.ViewHolder(view) {
+    fun addMovies(movies: List<Title>) {
+        val lastPos = this.movies.size
+        this.movies += movies
+        this.notifyItemRangeInserted(lastPos, movies.size)
+    }
+
+    inner class MovieHolder(var view: View) : RecyclerView.ViewHolder(view) {
         private var image = view.imageView
         private var ratingTextView = view.ratingTextView
 
-        fun bind(title: Title) {
-            ratingTextView.text = "sdfsdf"
+        fun bind(title: Title, position: Int) {
+            ratingTextView.text = ""
             Glide.with(image)
                 .load(title.poster)
                 .centerCrop()
                 .placeholder(R.drawable.bg_rating)
                 .into(image)
+            view.setOnClickListener {
+                listener?.onItemClick(this@MoviesAdapter, title, position)
+            }
         }
+    }
+
+    interface MoviesAdapterListener {
+        fun onItemClick(adapter: MoviesAdapter, item: Title, position: Int)
+        fun onLastItemReached(adapter: MoviesAdapter)
     }
 }

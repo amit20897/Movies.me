@@ -13,8 +13,7 @@
         <action
             android:id="@+id/action_navigation_home_to_titleFragment"
             app:destination="@id/titleFragment"
-            app:enterAnim="@anim/fragment_open_enter"
-            app:popExitAnim="@anim/fragment_open_exit" />
+            app:enterAnim="@anim/enter_top" />
     </fragment>
 
     <fragment

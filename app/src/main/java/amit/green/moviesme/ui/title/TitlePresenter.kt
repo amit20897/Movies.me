@@ -9,7 +9,7 @@ class TitlePresenter(var model: TitleContract.Model, view: TitleContract.View) :
 
     init {
 
-//        model.fetchMovies { e, movies -> view.updateMovies(movies ?: listOf()) }
+//        model.fetchMovies { e, movies -> view.addMovies(movies ?: listOf()) }
     }
 
     // region Lifecycle
