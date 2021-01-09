@@ -49,7 +49,7 @@ class MoviesAdapter(
             Glide.with(image)
                 .load(title.poster)
                 .centerCrop()
-                .placeholder(R.drawable.bg_rating)
+                .placeholder(R.drawable.bg_item_movie)
                 .into(image)
             view.setOnClickListener {
                 listener?.onItemClick(this@MoviesAdapter, title, position)

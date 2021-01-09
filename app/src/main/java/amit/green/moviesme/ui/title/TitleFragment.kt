@@ -97,7 +97,7 @@ class TitleFragment : Fragment(), TitleContract.View {
         Glide.with(this)
             .load(title.poster)
             .fitCenter()
-            .placeholder(R.drawable.bg_rating)
+            .placeholder(R.drawable.bg_item_movie)
             .into(posterImageView)
     }
 
