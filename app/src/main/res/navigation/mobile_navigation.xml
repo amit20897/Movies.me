@@ -13,7 +13,8 @@
         <action
             android:id="@+id/action_navigation_home_to_titleFragment"
             app:destination="@id/titleFragment"
-            app:enterAnim="@anim/enter_top" />
+            app:enterAnim="@anim/enter_top"
+            app:popExitAnim="@anim/exit_bottom" />
     </fragment>
 
     <fragment
@@ -30,10 +31,14 @@
     <fragment
         android:id="@+id/titleFragment"
         android:name="amit.green.moviesme.ui.title.TitleFragment"
-        android:label="TitleFragment"
+        android:label="{titleLabel}"
         tools:layout="@layout/fragment_title" >
         <argument
             android:name="title"
             app:argType="amit.green.moviesme.api.model.Title" />
+        <argument
+            android:name="titleLabel"
+            app:argType="string"
+            app:nullable="true" />
     </fragment>
 </navigation>

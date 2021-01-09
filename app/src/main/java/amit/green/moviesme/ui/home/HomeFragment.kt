@@ -31,7 +31,7 @@ class HomeFragment : Fragment(), HomeContract.View, MoviesAdapter.MoviesAdapterL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val homeModel = ViewModelProvider(this).get(HomeModel::class.java)
+        val homeModel = ViewModelProvider(requireActivity()).get(HomeModel::class.java)
         presenter = HomePresenter(homeModel, this)
     }
 
@@ -47,6 +47,7 @@ class HomeFragment : Fragment(), HomeContract.View, MoviesAdapter.MoviesAdapterL
                 val visibleItemCount: Int = layoutManager.childCount
                 val totalItemCount: Int = layoutManager.itemCount
                 val firstVisibleItemPosition: Int = layoutManager.findFirstVisibleItemPosition()
+                presenter.onFirstVisibleItemPositionChanged(firstVisibleItemPosition)
                 if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
                     presenter.onLastItemReached()
                 }
@@ -87,6 +88,10 @@ class HomeFragment : Fragment(), HomeContract.View, MoviesAdapter.MoviesAdapterL
         adapter.addMovies(movies)
     }
 
+    override fun scrollToPosition(position: Int) {
+        moviesRV.scrollToPosition(position)
+    }
+
     override fun startLoading() {
 
     }
@@ -110,7 +115,8 @@ class HomeFragment : Fragment(), HomeContract.View, MoviesAdapter.MoviesAdapterL
     override fun moveToTitleFragment(title: Title) {
         findNavController().navigate(
             HomeFragmentDirections.actionNavigationHomeToTitleFragment(
-                title
+                title,
+                title.title
             )
         )
     }

@@ -46,7 +46,7 @@ class TitleFragment : Fragment(), TitleContract.View {
     }
 
     override fun updateFavoriteMenuItem(menu: Menu, isFavorite: Boolean) {
-        menu.getItem(R.id.favorite)?.icon = ContextCompat.getDrawable(
+        menu.findItem(R.id.favorite)?.icon = ContextCompat.getDrawable(
             requireActivity(),
             if (isFavorite) R.drawable.ic_favorite_black_24dp else R.drawable.ic_favorite_border_black_24dp
         )
@@ -93,7 +93,7 @@ class TitleFragment : Fragment(), TitleContract.View {
 
         Glide.with(this)
             .load(title.poster)
-            .centerCrop()
+            .fitCenter()
             .placeholder(R.drawable.bg_rating)
             .into(posterImageView)
     }

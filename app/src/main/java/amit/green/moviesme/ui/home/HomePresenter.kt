@@ -21,13 +21,22 @@ class HomePresenter(var model: HomeContract.Model, view: HomeContract.View) :
     init {
         view.initRecyclerView()
 
-        fetchMovies()
+        if (model.movies.isNotEmpty()) {
+            view.setMovies(model.movies)
+            if (model.latestVisiblePosition != 0) {
+                view.scrollToPosition(model.latestVisiblePosition)
+            }
+        } else fetchMovies()
     }
 
     // region Lifecycle
 
     override fun onDestroy() {
         view = null
+    }
+
+    override fun onFirstVisibleItemPositionChanged(itemPosition: Int) {
+        model.latestVisiblePosition = itemPosition
     }
 
     // endregion

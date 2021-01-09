@@ -15,10 +15,11 @@
 
             <ImageView
                 android:id="@+id/posterImageView"
-                android:layout_width="wrap_content"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginTop="8dp"
+                app:layout_constraintDimensionRatio=""
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:srcCompat="@tools:sample/avatars" />
@@ -50,7 +51,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/releaseDateTV" />
+                app:layout_constraintTop_toBottomOf="@+id/barrier4" />
 
             <TextView
                 android:id="@+id/plotTV"
@@ -107,6 +108,13 @@
                 android:text="Released"
                 app:layout_constraintStart_toEndOf="@+id/posterImageView"
                 app:layout_constraintTop_toBottomOf="@+id/runtimeTV" />
+
+            <androidx.constraintlayout.widget.Barrier
+                android:id="@+id/barrier4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:barrierDirection="bottom"
+                app:constraint_referenced_ids="releaseDateTV,posterImageView" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>

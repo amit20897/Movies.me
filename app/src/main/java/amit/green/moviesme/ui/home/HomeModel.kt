@@ -17,6 +17,7 @@ class HomeModel : ViewModel(), HomeContract.Model {
     override var hasReachedEnd: Boolean = false
     override var currentPage: Int = 0
     override var currentSearch: String = ""
+    override var latestVisiblePosition: Int = 0
     private var isLoading = false
 
     // endregion
@@ -44,7 +45,6 @@ class HomeModel : ViewModel(), HomeContract.Model {
             }
         })
     }
-
 
     // endregion
 }

@@ -13,6 +13,7 @@ interface HomeContract {
         var hasReachedEnd: Boolean
         var currentPage: Int
         var currentSearch: String
+        var latestVisiblePosition: Int
 
         // endregion
 
@@ -44,6 +45,7 @@ interface HomeContract {
         fun startLoading()
         fun stopLoading()
         fun showError(message: String?)
+        fun scrollToPosition(position: Int)
 
         // endregion
     }
@@ -69,6 +71,7 @@ interface HomeContract {
 
         fun onMoviesReceived(movies: List<Title>, page: Int, search: String)
         fun onMoviesFetchFailed(e: Throwable?, page: Int, search: String)
+        fun onFirstVisibleItemPositionChanged(itemPosition: Int)
 
         // endregion
     }
