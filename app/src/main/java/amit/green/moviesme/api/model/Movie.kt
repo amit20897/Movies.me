@@ -1,12 +1,11 @@
 package amit.green.moviesme.api.model
 
-import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
 @Entity(tableName = "favoriteMovies")
-data class Movie (
+data class Movie(
     @SerializedName("Title")
     val title: String,
 
@@ -48,10 +47,6 @@ data class Movie (
 
     @SerializedName("Poster")
     val poster: String,
-
-    @Embedded
-    @SerializedName("Ratings")
-    val ratings: List<Rating>,
 
     @SerializedName("Metascore")
     val metascore: String,

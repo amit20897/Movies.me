@@ -2,6 +2,7 @@ package amit.green.moviesme.ui.title
 
 import amit.green.moviesme.R
 import amit.green.moviesme.api.model.Movie
+import amit.green.moviesme.ui.FavoritesViewModel
 import android.os.Bundle
 import android.view.*
 import androidx.core.content.ContextCompat
@@ -30,7 +31,9 @@ class TitleFragment : Fragment(), TitleContract.View {
         super.onViewCreated(view, savedInstanceState)
 
         val homeModel = ViewModelProvider(this).get(TitleModel::class.java)
-        presenter = TitlePresenter(homeModel, this, args)
+        val favoritesViewModel =
+            ViewModelProvider(requireActivity()).get(FavoritesViewModel::class.java)
+        presenter = TitlePresenter(homeModel, this, args, favoritesViewModel)
     }
 
     // region Initialization
@@ -104,6 +107,10 @@ class TitleFragment : Fragment(), TitleContract.View {
             message ?: getString(R.string.error_full_title_fetch),
             Snackbar.LENGTH_SHORT
         ).show()
+    }
+
+    override fun invalidateOptionsMenu() {
+        this.activity?.invalidateOptionsMenu()
     }
 
     // endregion

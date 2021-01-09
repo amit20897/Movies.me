@@ -1,10 +1,15 @@
 package amit.green.moviesme.ui.home
 
 import amit.green.moviesme.api.model.Title
-import android.os.Handler
+import amit.green.moviesme.ui.FavoritesViewModel
 import java.util.*
+import kotlin.collections.ArrayList
 
-class HomePresenter(var model: HomeContract.Model, view: HomeContract.View) :
+class HomePresenter(
+    var model: HomeContract.Model,
+    view: HomeContract.View,
+    var favoritesViewModel: FavoritesViewModel
+) :
     HomeContract.Presenter {
 
     companion object {
@@ -35,10 +40,6 @@ class HomePresenter(var model: HomeContract.Model, view: HomeContract.View) :
         view = null
     }
 
-    override fun onFirstVisibleItemPositionChanged(itemPosition: Int) {
-        model.latestVisiblePosition = itemPosition
-    }
-
     // endregion
 
     // region View Events
@@ -56,6 +57,10 @@ class HomePresenter(var model: HomeContract.Model, view: HomeContract.View) :
         // do nothing
     }
 
+    override fun onFirstVisibleItemPositionChanged(itemPosition: Int) {
+        model.latestVisiblePosition = itemPosition
+    }
+
     override fun onQueryTextChange(newText: String?) {
         searchDelayTimer?.cancel()
         val timer = Timer()
@@ -67,6 +72,10 @@ class HomePresenter(var model: HomeContract.Model, view: HomeContract.View) :
         searchDelayTimer = timer
     }
 
+    override fun onIsTitleFavorite(title: Title): Boolean {
+        return favoritesViewModel.isFavorite(title.imdbID ?: "")
+    }
+
     // endregion
 
     // region Model Events
@@ -75,8 +84,13 @@ class HomePresenter(var model: HomeContract.Model, view: HomeContract.View) :
         if (search != model.currentSearch) return
 
         view?.stopLoading()
-        if (page == 1) view?.setMovies(movies)
-        else view?.addMovies(movies)
+        if (page == 1) {
+            model.movies = ArrayList(movies)
+            view?.setMovies(movies)
+        } else {
+            model.movies.addAll(movies)
+            view?.addMovies(movies)
+        }
         model.currentPage++
         if (movies.size < 10) model.hasReachedEnd = true
     }

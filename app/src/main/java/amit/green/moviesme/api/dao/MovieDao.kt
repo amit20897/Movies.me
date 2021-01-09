@@ -11,12 +11,12 @@ interface MovieDao {
     @Query("SELECT * FROM favoriteMovies")
     fun getAll(): List<Movie>
 
-    @Query("SELECT * FROM favoriteMovies WHERE imdbID IN (:userIds)")
-    fun loadAllByIds(userIds: IntArray): List<Movie>
-
     @Insert
-    fun insertAll(vararg users: Movie)
+    fun insertAll(vararg movies: Movie)
 
     @Delete
-    fun delete(user: Movie)
+    fun delete(movie: Movie)
+
+    @Query("DELETE FROM favoriteMovies WHERE imdbID = :imdbID")
+    fun deleteById(imdbID: String)
 }

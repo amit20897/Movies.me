@@ -64,6 +64,8 @@ interface HomeContract {
         fun onLastItemReached()
         fun onQueryTextSubmit(query: String?)
         fun onQueryTextChange(newText: String?)
+        fun onFirstVisibleItemPositionChanged(itemPosition: Int)
+        fun onIsTitleFavorite(title: Title): Boolean
 
         // endregion
 
@@ -71,7 +73,6 @@ interface HomeContract {
 
         fun onMoviesReceived(movies: List<Title>, page: Int, search: String)
         fun onMoviesFetchFailed(e: Throwable?, page: Int, search: String)
-        fun onFirstVisibleItemPositionChanged(itemPosition: Int)
 
         // endregion
     }

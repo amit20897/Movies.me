@@ -7,4 +7,6 @@
     <string name="error_movies_fetch">Failed to load movies</string>
     <string name="error_full_title_fetch">Failed to load details</string>
     <string name="favorite">Favorite</string>
+    <string name="title_favorites">Favorites</string>
+    <string name="title_explore">Explore</string>
 </resources>

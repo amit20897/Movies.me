@@ -36,6 +36,7 @@ interface TitleContract {
         fun setFullTitle(title: Movie)
         fun showError(message: String?)
         fun updateFavoriteMenuItem(menu: Menu, isFavorite: Boolean)
+        fun invalidateOptionsMenu()
 
         // endregion
     }

@@ -41,10 +41,11 @@ class MoviesAdapter(
 
     inner class MovieHolder(var view: View) : RecyclerView.ViewHolder(view) {
         private var image = view.imageView
-        private var ratingTextView = view.ratingTextView
+        private var favoriteImageView = view.favoriteIV
 
         fun bind(title: Title, position: Int) {
-            ratingTextView.text = ""
+            val isFavorite = listener?.isTitleFavorite(this@MoviesAdapter, title, position) ?: false
+            favoriteImageView.visibility = if (isFavorite) View.VISIBLE else View.INVISIBLE
             Glide.with(image)
                 .load(title.poster)
                 .centerCrop()
@@ -58,5 +59,6 @@ class MoviesAdapter(
 
     interface MoviesAdapterListener {
         fun onItemClick(adapter: MoviesAdapter, item: Title, position: Int)
+        fun isTitleFavorite(adapter: MoviesAdapter, title: Title, position: Int): Boolean
     }
 }

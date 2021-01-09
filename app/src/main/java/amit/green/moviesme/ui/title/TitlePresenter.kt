@@ -1,13 +1,14 @@
 package amit.green.moviesme.ui.title
 
-import amit.green.moviesme.R
 import amit.green.moviesme.api.model.Movie
+import amit.green.moviesme.ui.FavoritesViewModel
 import android.view.Menu
 
 class TitlePresenter(
     var model: TitleContract.Model,
     view: TitleContract.View,
-    args: TitleFragmentArgs
+    args: TitleFragmentArgs,
+    val favoritesViewModel: FavoritesViewModel
 ) :
     TitleContract.Presenter {
 
@@ -34,11 +35,16 @@ class TitlePresenter(
     // region View Events
 
     override fun onFavoriteButtonClick() {
-        // TODO: add to favorites
+        val movie = model.movie ?: return
+        val isFavorite = favoritesViewModel.isFavorite(movie)
+        if (!isFavorite) favoritesViewModel.addFavorite(movie)
+        else favoritesViewModel.removeFavorite(movie)
+
+        view?.invalidateOptionsMenu()
     }
 
     override fun onPrepareOptionsMenu(menu: Menu) {
-        val isFavorite = false
+        val isFavorite = favoritesViewModel.isFavorite(model.title.imdbID ?: "")
         view?.updateFavoriteMenuItem(menu, isFavorite)
     }
 

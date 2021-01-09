@@ -1,5 +1,6 @@
 package amit.green.moviesme
 
+import amit.green.moviesme.api.dao.AppDatabase
 import android.os.Bundle
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import androidx.appcompat.app.AppCompatActivity
@@ -26,6 +27,8 @@ class MainActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+        AppDatabase.create(this)
     }
 
     override fun onSupportNavigateUp(): Boolean {

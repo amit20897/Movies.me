@@ -34,7 +34,6 @@ class HomeModel : ViewModel(), HomeContract.Model {
                 if (movies == null) {
                     presenter?.onMoviesFetchFailed(null, page, search)
                 } else {
-                    this@HomeModel.movies.addAll(movies)
                     presenter?.onMoviesReceived(movies, page, search)
                 }
             }

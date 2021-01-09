@@ -2,6 +2,7 @@ package amit.green.moviesme.ui.home
 
 import amit.green.moviesme.R
 import amit.green.moviesme.api.model.Title
+import amit.green.moviesme.ui.FavoritesViewModel
 import android.os.Bundle
 import android.view.*
 import android.widget.SearchView
@@ -31,8 +32,10 @@ class HomeFragment : Fragment(), HomeContract.View, MoviesAdapter.MoviesAdapterL
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        val homeModel = ViewModelProvider(requireActivity()).get(HomeModel::class.java)
-        presenter = HomePresenter(homeModel, this)
+        val activity = requireActivity()
+        val homeModel = ViewModelProvider(activity).get(HomeModel::class.java)
+        val favoritesViewModel = ViewModelProvider(activity).get(FavoritesViewModel::class.java)
+        presenter = HomePresenter(homeModel, this, favoritesViewModel)
     }
 
     // region Initialization
@@ -127,6 +130,10 @@ class HomeFragment : Fragment(), HomeContract.View, MoviesAdapter.MoviesAdapterL
 
     override fun onItemClick(adapter: MoviesAdapter, item: Title, position: Int) {
         presenter.onItemClick(item, position)
+    }
+
+    override fun isTitleFavorite(adapter: MoviesAdapter, title: Title, position: Int): Boolean {
+        return presenter.onIsTitleFavorite(title)
     }
 
     // endregion
