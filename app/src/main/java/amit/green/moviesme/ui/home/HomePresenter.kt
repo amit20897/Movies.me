@@ -54,7 +54,7 @@ class HomePresenter(var model: HomeContract.Model, view: HomeContract.View) :
             override fun run() {
                 fetchMovies(newText)
             }
-        }, 200)
+        }, 400)
         searchDelayTimer = timer
     }
 
@@ -66,9 +66,10 @@ class HomePresenter(var model: HomeContract.Model, view: HomeContract.View) :
         if (search != model.currentSearch) return
 
         view?.stopLoading()
-        view?.addMovies(movies)
+        if (page == 1) view?.setMovies(movies)
+        else view?.addMovies(movies)
         model.currentPage++
-        if (movies.isEmpty()) model.hasReachedEnd = true
+        if (movies.size < 10) model.hasReachedEnd = true
     }
 
     override fun onMoviesFetchFailed(e: Throwable?, page: Int, search: String) {
@@ -87,7 +88,7 @@ class HomePresenter(var model: HomeContract.Model, view: HomeContract.View) :
 
         if (model.currentSearch != search) {
             model.currentSearch = clnSearch
-            model.currentPage = -1
+            model.currentPage = 0
             model.hasReachedEnd = false
         }
         view?.startLoading()

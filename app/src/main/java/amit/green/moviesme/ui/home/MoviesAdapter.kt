@@ -24,7 +24,6 @@ class MoviesAdapter(
     override fun onBindViewHolder(holder: MovieHolder, position: Int) {
         val title = movies[position]
         holder.bind(title, position)
-        listener?.onLastItemReached(this)
     }
 
     override fun getItemCount(): Int = movies.size
@@ -59,6 +58,5 @@ class MoviesAdapter(
 
     interface MoviesAdapterListener {
         fun onItemClick(adapter: MoviesAdapter, item: Title, position: Int)
-        fun onLastItemReached(adapter: MoviesAdapter)
     }
 }

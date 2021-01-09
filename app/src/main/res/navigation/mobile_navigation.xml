@@ -31,5 +31,9 @@
         android:id="@+id/titleFragment"
         android:name="amit.green.moviesme.ui.title.TitleFragment"
         android:label="TitleFragment"
-        tools:layout="@layout/fragment_title" />
+        tools:layout="@layout/fragment_title" >
+        <argument
+            android:name="title"
+            app:argType="amit.green.moviesme.api.model.Title" />
+    </fragment>
 </navigation>

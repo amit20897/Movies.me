@@ -1,7 +1,8 @@
-package amit.green.moviesme.ui.home
+package amit.green.moviesme.ui.title
 
 import amit.green.moviesme.api.model.Movie
 import amit.green.moviesme.api.model.Title
+import android.view.Menu
 
 interface TitleContract {
 
@@ -9,6 +10,7 @@ interface TitleContract {
 
         // region Properties
 
+        var presenter: Presenter?
         var title: Title
         var movie: Movie?
 
@@ -16,7 +18,7 @@ interface TitleContract {
 
         // region Networking
 
-        fun fetchFullTitle(cb: (Throwable?, Title?) -> Unit)
+        fun fetchFullTitle()
 
         // endregion
     }
@@ -29,6 +31,12 @@ interface TitleContract {
 
         // region State Update
 
+        fun startLoading()
+        fun stopLoading()
+        fun setFullTitle(title: Movie)
+        fun showError(message: String?)
+        fun updateFavoriteMenuItem(menu: Menu, isFavorite: Boolean)
+
         // endregion
     }
 
@@ -36,11 +44,21 @@ interface TitleContract {
 
         // region View Events
 
+        fun onFavoriteButtonClick()
+
         // endregion
 
         // region Lifecycle
 
         fun onDestroy()
+
+        // endregion
+
+        // region Model Events
+
+        fun onFullTitleLoaded(title: Movie)
+        fun onFullTitleFetchError(t: Throwable?)
+        fun onPrepareOptionsMenu(menu: Menu)
 
         // endregion
     }

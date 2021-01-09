@@ -4,14 +4,18 @@ import amit.green.moviesme.R
 import amit.green.moviesme.api.model.Title
 import android.os.Bundle
 import android.view.*
-import androidx.appcompat.widget.SearchView
+import android.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.fragment_home.*
 
-class HomeFragment : Fragment(), HomeContract.View, MoviesAdapter.MoviesAdapterListener, SearchView.OnQueryTextListener {
+class HomeFragment : Fragment(), HomeContract.View, MoviesAdapter.MoviesAdapterListener,
+    SearchView.OnQueryTextListener {
 
     private lateinit var presenter: HomeContract.Presenter
 
@@ -35,6 +39,19 @@ class HomeFragment : Fragment(), HomeContract.View, MoviesAdapter.MoviesAdapterL
 
     override fun initRecyclerView() {
         moviesRV.adapter = MoviesAdapter(listOf(), this)
+        moviesRV.addOnScrollListener(object : OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+
+                val layoutManager = moviesRV.layoutManager as? GridLayoutManager ?: return
+                val visibleItemCount: Int = layoutManager.childCount
+                val totalItemCount: Int = layoutManager.itemCount
+                val firstVisibleItemPosition: Int = layoutManager.findFirstVisibleItemPosition()
+                if (visibleItemCount + firstVisibleItemPosition >= totalItemCount && firstVisibleItemPosition >= 0) {
+                    presenter.onLastItemReached()
+                }
+            }
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -91,7 +108,11 @@ class HomeFragment : Fragment(), HomeContract.View, MoviesAdapter.MoviesAdapterL
     // region Navigation
 
     override fun moveToTitleFragment(title: Title) {
-        findNavController().navigate(HomeFragmentDirections.actionNavigationHomeToTitleFragment())
+        findNavController().navigate(
+            HomeFragmentDirections.actionNavigationHomeToTitleFragment(
+                title
+            )
+        )
     }
 
     // endregion
@@ -100,10 +121,6 @@ class HomeFragment : Fragment(), HomeContract.View, MoviesAdapter.MoviesAdapterL
 
     override fun onItemClick(adapter: MoviesAdapter, item: Title, position: Int) {
         presenter.onItemClick(item, position)
-    }
-
-    override fun onLastItemReached(adapter: MoviesAdapter) {
-        presenter.onLastItemReached()
     }
 
     // endregion
